@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { deletePost, onePost } from "../services/getRequests";
+import { updatePost, deletePost, onePost } from "../services/getRequests";
 
 export default function Show(){
     const nav = useNavigate()
@@ -16,28 +16,54 @@ export default function Show(){
         })
     }, [])
 
+    const addComment = e => {
+        e.preventDefault()
+        comments.push({ 
+            name: e.target.name.value, 
+            message: e.target.message.value})
+        const post = {
+            title: data.title,
+            body: data.body,
+            author: data.author,
+            date: data.date,
+            image: data.image,
+            comments: comments }
+        updatePost(id, post)
+        e.target.name.value = null
+        e.target.message.value = null
+    }
     const deleteThePost = () => {
         deletePost(id)
         nav('/')
     }
    
     return(
-        <div>
+        <div id='post'>
             <h1> {data.title} </h1>
             <h3> {data.author}  {data.date} </h3>
             <img src={`${data.image}`} height='300' width='200' />
-            <p> {data.body} </p>
-            <button onClick={()=> {nav(`/${id}/update`)}}> Edit Post </button>
+            <p> {data.body} </p> <br/>
+            <button onClick={()=> {nav(`/${id}/update`)}}> Edit Post </button> <br/>
             <button onClick={deleteThePost}> Delete Post </button>
             <h1> Comments </h1>
-            <ul>
+            <ul id='showul'>
                 {comments.map((comment, i)=>(
-                    <li key={i}>
-                        <h3> {comment.name} </h3>
+                    <div className='comments'>
+                    <li key={i} id='showli'>
+                        <h3> User: {comment.name} </h3>
                         <p> {comment.message} </p>
                     </li>               
+                    </div>
                 ))}
             </ul>
+            <div id='commentsForm'>
+                <h3> New Comment </h3>
+                <form onSubmit={addComment}>
+                    Name: <input type='text' name='name' /> <br/>
+                    Message: <input type='text' name='message'/><br/>
+                    <input type='submit' value='Add Comment' />
+                </form>
+            </div>
         </div>
     )
 }
