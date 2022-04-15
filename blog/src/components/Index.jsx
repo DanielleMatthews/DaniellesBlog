@@ -21,7 +21,7 @@ export default function Index(){
                 {data.map((item, i)=>{
                     return(
                     <li key={i} id='posts'>
-                        <a href= {`http://localhost:3000/${item._id}`} > {item.title} </a> <br/> <br/>
+                        <a href= {`/${item._id}`} > {item.title} </a> <br/> <br/>
                         <img src={`${item.image}`} height='300px' ></img>
                     </li>
                 )})}
